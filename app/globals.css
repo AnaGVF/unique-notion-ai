@@ -119,3 +119,17 @@
   }
 }
 
+/* Hide Next.js development indicators */
+div[data-nextjs-dev-indicator] {
+  display: none !important;
+}
+
+div[style*="z-index: 2147483647"] {
+  display: none !important;
+}
+
+/* Hide any Next.js overlay */
+div[data-nextjs-dialog-overlay] {
+  display: none !important;
+}
+
