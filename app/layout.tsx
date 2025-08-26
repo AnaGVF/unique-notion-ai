@@ -17,8 +17,13 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body>
-        <Header/>
-        {children}</body>
+        <Header />
+        
+        <div>
+
+        </div>
+        {children}
+      </body>
     </html>
     </ClerkProvider>
   );

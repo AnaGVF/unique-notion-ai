@@ -117,6 +117,19 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* General button styling */
+  button {
+    @apply cursor-pointer transition-opacity hover:opacity-80;
+  }
+  
+  /* Style for interactive elements */
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    @apply cursor-pointer transition-opacity hover:opacity-80;
+  }
 }
 
 /* Hide Next.js development indicators */
