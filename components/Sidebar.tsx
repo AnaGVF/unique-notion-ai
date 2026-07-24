@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from "@/components/ui/sheet";
+import SidebarOption from "./SidebarOption";
 
 
 interface RoomDocument extends DocumentData {
@@ -89,8 +90,7 @@ function Sidebar() {
               My Documents
             </h2>
             {groupedData.owner.map((doc) => (
-              <p>{doc.roomId}</p>
-              // <SidebarOption key={doc.id} documentId={doc.id} href={`/doc/${doc.id}`} />
+              <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
             ))}
           </>
         )}
