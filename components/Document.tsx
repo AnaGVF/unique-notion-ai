@@ -7,6 +7,8 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
+import LoadingSpinner from './LoadingSpinner';
+
 function Document({ id }: { id: string }) {
     const [data, loading, error] = useDocumentData(doc(db, "documents", id));
     const [input, setInput] = useState('')
@@ -29,6 +31,10 @@ function Document({ id }: { id: string }) {
                 });
             });
         }
+    }
+
+    if (loading || !data) {
+        return <LoadingSpinner />;
     }
 
     return (
