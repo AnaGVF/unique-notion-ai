@@ -11,6 +11,8 @@ import LoadingSpinner from './LoadingSpinner';
 import Editor from './Editor';
 import useOwner from '@/lib/useOwner';
 import DeleteDocument from './DeleteDocument';
+import InviteUser from './InviteUser';
+import ManageUsers from './ManageUsers';
 
 function Document({ id }: { id: string }) {
     const [data, loading, error] = useDocumentData(doc(db, "documents", id));
@@ -55,21 +57,17 @@ function Document({ id }: { id: string }) {
                         {isUpdating ? 'Updating...' : 'Update'}
                     </Button>
 
-                    {/* IF */}
                     {isOwner && (
                         <>
-                            {/* InviteUser */}
-                            {/* DeleteDocument */}
+                            <InviteUser />
                             <DeleteDocument id={id} />
-                            <p className='text-sm text-gray-700'>I own this document!</p>
                         </>
                     )}
-                    {/* isOwner && InviteUser, DeleteDocument */}
                 </form>
             </div>
 
-            <div>
-                {/* ManageUsers */}
+            <div className='flex max-w-6xl mx-auto justify-between items-center mb-5'>
+                <ManageUsers />
 
                 {/* Avatars */}
             </div>
