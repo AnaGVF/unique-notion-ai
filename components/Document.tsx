@@ -9,11 +9,14 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import LoadingSpinner from './LoadingSpinner';
 import Editor from './Editor';
+import useOwner from '@/lib/useOwner';
+import DeleteDocument from './DeleteDocument';
 
 function Document({ id }: { id: string }) {
     const [data, loading, error] = useDocumentData(doc(db, "documents", id));
     const [input, setInput] = useState('')
     const [isUpdating, startTransition] = useTransition();
+    const isOwner = useOwner();
 
     useEffect(() => {
         if (data) {
@@ -53,6 +56,14 @@ function Document({ id }: { id: string }) {
                     </Button>
 
                     {/* IF */}
+                    {isOwner && (
+                        <>
+                            {/* InviteUser */}
+                            {/* DeleteDocument */}
+                            <DeleteDocument id={id} />
+                            <p className='text-sm text-gray-700'>I own this document!</p>
+                        </>
+                    )}
                     {/* isOwner && InviteUser, DeleteDocument */}
                 </form>
             </div>
