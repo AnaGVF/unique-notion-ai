@@ -14,10 +14,11 @@ import "@blocknote/shadcn/style.css";
 import { useSelf } from '@liveblocks/react';
 import stringToColor from '@/lib/stringToColor';
 import TranslateDocument from './TranslateDocument';
+import ChatToDocument from './ChatToDocument';
 
 type EditorProps = {
     doc: Y.Doc;
-    provider: any;
+    provider: LiveblocksYjsProvider;
     darkMode: boolean;
 };
 
@@ -27,7 +28,9 @@ function BlockNote({ doc, provider, darkMode }: EditorProps) {
     const editor = useCreateBlockNote(
         withCollaboration({
             collaboration: {
-                provider,
+                provider: provider as unknown as Parameters<
+                    typeof withCollaboration
+                >[0]["collaboration"]["provider"],
                 fragment: doc.getXmlFragment("document-store"),
                 user: {
                     name: userInfo?.name || "Anonymous",
@@ -96,7 +99,7 @@ function Editor() {
         <div className='max-w-6xl mx-auto'>
             <div className='flex items-center gap-2 justify-end mb-10'>
                 <TranslateDocument doc={doc} />
-                {/* ChatToDocument AI */}
+                <ChatToDocument doc={doc} />
 
                 {/* Dark Mode */}
                 <Button className={style} onClick={() => setDarkMode(!darkMode)}>

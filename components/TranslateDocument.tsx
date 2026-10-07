@@ -7,7 +7,6 @@ import { FormEvent, useState, useTransition } from "react";
 import {
     Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
@@ -61,11 +60,9 @@ const languages: Language[] = [
     "hindi",
 ];
 
-
 function TranslateDocument({ doc }: { doc: Y.Doc }) {
     const [isOpen, setIsOpen] = useState(false);
     const [summary, setSummary] = useState('');
-    const [question, setQuestion] = useState('');
     const [language, setLanguage] = useState<string>("");
     const [isPending, startTransition] = useTransition();
 
@@ -115,8 +112,6 @@ function TranslateDocument({ doc }: { doc: Y.Doc }) {
                         Select a language and AI will translate a summary of the document in the selected language.
                     </DialogDescription>
                     <hr className="mt-5" />
-
-                    {question && <p className="mt-5 text-gray-500">Your question: {question}</p>}
                 </DialogHeader>
 
                 {summary && (
@@ -127,7 +122,7 @@ function TranslateDocument({ doc }: { doc: Y.Doc }) {
                                 AI {isPending ? "is thinking..." : "says:"}
                             </p>
                         </div>
-                        <p>{isPending ? "Thinking..." : <Markdown>{summary}</Markdown>}</p>
+                        <div>{isPending ? "Thinking..." : <Markdown>{summary}</Markdown>}</div>
                     </div>
                 )}
 

@@ -3,18 +3,16 @@
 import React, { FormEvent, useState } from 'react'
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from './ui/button';
 import { useTransition } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { deleteDocument, inviteUserToDocument } from '@/actions/actions';
+import { usePathname } from 'next/navigation';
+import { inviteUserToDocument } from '@/actions/actions';
 import { toast } from 'sonner';
 import { Input } from './ui/input';
 
@@ -23,7 +21,6 @@ function InviteUser({ id }: { id?: string }) {
     const [isPending, startTransition] = useTransition();
     const [email, setEmail] = useState('');
     const pathname = usePathname();
-    const router = useRouter();
 
     const handleInvite = async (e: FormEvent) => {
         e.preventDefault();
