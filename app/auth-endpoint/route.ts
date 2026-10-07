@@ -21,14 +21,14 @@ export async function POST(req: NextRequest) {
         },
     });
 
-    const usersInRoom = await adminDB
-        .collectionGroup('rooms')
-        .where('userId', '==', email)
+    const userInRoom = await adminDB
+        .collection("users")
+        .doc(email)
+        .collection("rooms")
+        .doc(room)
         .get();
 
-    const userInRoom = usersInRoom.docs.find((doc) => doc.id === room);
-
-    if (userInRoom?.exists) {
+    if (userInRoom.exists) {
         console.log(`[AUTH-ENDPOINT] User ${email} is authorized for room ${room}`);
         session.allow(room, session.FULL_ACCESS);
 

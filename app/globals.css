@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@source "../node_modules/@blocknote/shadcn";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -115,15 +114,16 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* General button styling */
   button {
     @apply cursor-pointer transition-opacity hover:opacity-80;
   }
-  
+
   /* Style for interactive elements */
   [role="button"],
   input[type="button"],
@@ -146,4 +146,3 @@ div[style*="z-index: 2147483647"] {
 div[data-nextjs-dialog-overlay] {
   display: none !important;
 }
-

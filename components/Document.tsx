@@ -8,8 +8,12 @@ import { db } from '@/firebase';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import LoadingSpinner from './LoadingSpinner';
-import Editor from './Editor';
+import dynamic from 'next/dynamic';
 import useOwner from '@/lib/useOwner';
+
+const Editor = dynamic(() => import('./Editor'), {
+    ssr: false,
+});
 import DeleteDocument from './DeleteDocument';
 import InviteUser from './InviteUser';
 import ManageUsers from './ManageUsers';

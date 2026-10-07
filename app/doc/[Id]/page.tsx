@@ -1,6 +1,7 @@
 'use client'
 
 import Document from "@/components/Document";
+import RoomProvider from "@/components/RoomProvider";
 import { use } from "react";
 
 function DocumentPage({
@@ -16,7 +17,9 @@ function DocumentPage({
 
     return (
         <div className="flex flex-col flex-1 min-h-screen">
-            <Document id={id} />
+            <RoomProvider roomId={id}>
+                <Document id={id} />
+            </RoomProvider>
         </div>
     );
 }
