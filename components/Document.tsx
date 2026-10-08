@@ -48,14 +48,14 @@ function Document({ id }: { id: string }) {
     }
 
     return (
-        <div className='flex-1 h-full bg-white p-5'>
+        <div className='flex-1 h-full bg-white dark:bg-gray-950 p-5 rounded-lg shadow-xs border border-gray-200 dark:border-gray-800 transition-colors'>
             <div className='flex max-w-6xl mx-auto justify-between pb-5'>
                 <form className='flex flex-1 space-x-2' onSubmit={updateTitle}>
                     {/* update title... */}
                     <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        className="bg-white"
+                        className="bg-white dark:bg-gray-900 font-semibold"
                     />
 
                     <Button disabled={isUpdating} type='submit'>
@@ -77,7 +77,7 @@ function Document({ id }: { id: string }) {
                 <Avatars />
             </div>
 
-            <hr className='pb-10' />
+            <hr className='pb-10 border-gray-200 dark:border-gray-800' />
 
             <Editor />
 

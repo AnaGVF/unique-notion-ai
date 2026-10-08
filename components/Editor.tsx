@@ -15,6 +15,7 @@ import { useSelf } from '@liveblocks/react';
 import stringToColor from '@/lib/stringToColor';
 import TranslateDocument from './TranslateDocument';
 import ChatToDocument from './ChatToDocument';
+import { useTheme } from 'next-themes';
 
 type EditorProps = {
     doc: Y.Doc;
@@ -56,7 +57,12 @@ function Editor() {
     const room = useRoom();
     const [doc, setDoc] = useState<Y.Doc>();
     const [provider, setProvider] = useState<LiveblocksYjsProvider>();
-    const [darkMode, setDarkMode] = useState(false);
+    const { resolvedTheme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const yDoc = new Y.Doc();
@@ -89,11 +95,7 @@ function Editor() {
         return null;
     }
 
-    const style = `hover:text-white ${darkMode
-        ? "text-gray-300 bg-gray-700 hover:bg-gray-100 hover:text-gray-700"
-        : "text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-700"
-        }`;
-
+    const isDarkMode = mounted ? resolvedTheme === "dark" : false;
 
     return (
         <div className='max-w-6xl mx-auto'>
@@ -102,12 +104,16 @@ function Editor() {
                 <ChatToDocument doc={doc} />
 
                 {/* Dark Mode */}
-                <Button className={style} onClick={() => setDarkMode(!darkMode)}>
-                    {darkMode ? <SunIcon /> : <MoonIcon />}
+                <Button
+                    variant="outline"
+                    onClick={() => setTheme(isDarkMode ? "light" : "dark")}
+                    aria-label="Toggle dark mode"
+                >
+                    {isDarkMode ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
                 </Button>
             </div>
             {/* BlockNote */}
-            <BlockNote doc={doc} provider={provider} darkMode={darkMode} />
+            <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} />
         </div>
     )
 }

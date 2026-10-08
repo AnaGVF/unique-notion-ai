@@ -81,12 +81,12 @@ function Sidebar() {
       <div className="flex py-4 flex-col space-y-4 md:max-w-36">
         {/* My Documents */}
         {groupedData.owner.length === 0 ? (
-          <h2 className="text-gray-500 font-semibold text-sm">
+          <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm">
             No documents found.
           </h2>
         ) : (
           <>
-            <h2 className="text-gray-500 font-semibold text-sm">
+            <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm">
               My Documents
             </h2>
             {groupedData.owner.map((doc) => (
@@ -95,11 +95,10 @@ function Sidebar() {
           </>
         )}
 
-
         {/* Shared with Me */}
         {groupedData.editor.length > 0 && (
           <>
-            <h2 className="text-gray-500 font-semibold text-sm">
+            <h2 className="text-gray-500 dark:text-gray-400 font-semibold text-sm">
               Shared with Me
             </h2>
             {groupedData.editor.map((doc) => (
@@ -107,22 +106,20 @@ function Sidebar() {
             ))}
           </>
         )}
-
-        {/* List... */}
       </div>
     </>
   );
 
   return (
-    <div className="p-2 md:p-5 bg-gray-200 relative">
+    <div className="p-2 md:p-5 bg-gray-200 dark:bg-gray-950 border-r border-gray-300 dark:border-gray-800 relative transition-colors">
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger>
-            <MenuIcon className="p-2 hover:opacity-30 rounded-lg" size={40} />
+            <MenuIcon className="p-2 hover:opacity-30 rounded-lg text-gray-800 dark:text-gray-200" size={40} />
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent side="left" className="bg-gray-200 dark:bg-gray-950 border-r border-gray-300 dark:border-gray-800">
             <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle className="text-gray-900 dark:text-gray-100">Menu</SheetTitle>
               <div>
                 {menuOptions}
               </div>

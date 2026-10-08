@@ -72,12 +72,12 @@ function ChatToDocument({ doc }: { doc: Y.Doc }) {
                     <DialogDescription>
                         Ask a question and chat to the document with AI.
                     </DialogDescription>
-                    <hr className="mt-5" />
+                    <hr className="mt-5 border-gray-200 dark:border-gray-800" />
 
-                    {question && <p className="mt-5 text-gray-500">Your question: {question}</p>}
+                    {question && <p className="mt-5 text-gray-500 dark:text-gray-400">Your question: {question}</p>}
                 </DialogHeader>
 
-                {summary && <div className="flex flex-col items-start max-h-96 overflow-y-scroll gap-2 p-5 bg-gray-100">
+                {summary && <div className="flex flex-col items-start max-h-96 overflow-y-scroll gap-2 p-5 bg-gray-100 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800">
                     <div className="flex">
                         <BotIcon className="w-10 flex-shrink-0" />
                         <p className="font-bold">

@@ -111,11 +111,11 @@ function TranslateDocument({ doc }: { doc: Y.Doc }) {
                     <DialogDescription>
                         Select a language and AI will translate a summary of the document in the selected language.
                     </DialogDescription>
-                    <hr className="mt-5" />
+                    <hr className="mt-5 border-gray-200 dark:border-gray-800" />
                 </DialogHeader>
 
                 {summary && (
-                    <div className="flex flex-col items-start max-h-96 overflow-y-scroll gap-2 p-5 bg-gray-100">
+                    <div className="flex flex-col items-start max-h-96 overflow-y-scroll gap-2 p-5 bg-gray-100 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800">
                         <div className="flex">
                             <BotIcon className="w-10 flex-shrink-0" />
                             <p className="font-bold">

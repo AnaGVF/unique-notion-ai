@@ -17,8 +17,14 @@ function SidebarOption({ href, id }: {
     if (!data) return null;
 
     return (
-        <Link href={href} className={`border p-2 rounded-md ${isActive ? "bg-gray-300 font bold border-black" : "border-gray-400"
-            }`}>
+        <Link
+            href={href}
+            className={`border p-2 rounded-md transition-colors block ${
+                isActive
+                    ? "bg-gray-300 dark:bg-gray-800 font-bold border-gray-600 dark:border-gray-500 text-gray-900 dark:text-gray-100"
+                    : "border-gray-400 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300/50 dark:hover:bg-gray-800/50"
+            }`}
+        >
             <p className='truncate'>{data.title}</p>
         </Link>
     )

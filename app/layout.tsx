@@ -3,7 +3,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,14 +19,23 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body suppressHydrationWarning>
-          <Header />
+        <body suppressHydrationWarning className="min-h-screen bg-background text-foreground antialiased">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
 
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <div className="flex-1 p-4 bg-gray-100 overflow-y-auto scrollbar-hide">{children}</div>
-          </div>
-          <Toaster position="top-center" />
+            <div className="flex min-h-[calc(100vh-73px)]">
+              <Sidebar />
+              <div className="flex-1 p-4 bg-gray-100 dark:bg-gray-900 overflow-y-auto scrollbar-hide">
+                {children}
+              </div>
+            </div>
+            <Toaster position="top-center" />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
