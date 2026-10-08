@@ -3,21 +3,34 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
 import DarkModeToggle from "./DarkModeToggle";
+import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 function Header() {
   const { user } = useUser();
 
   return (
-    <header className="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 transition-colors">
-      {user && (
-        <h1 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-gray-100">
-          {user?.firstName}{`'s`} Space
-        </h1>
-      )}
+    <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-3 md:px-6 md:py-3.5 border-b border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md transition-colors shadow-2xs">
+      <div className="flex items-center gap-3">
+        <Link
+          href="/"
+          title="Go to Home"
+          className="flex items-center gap-2.5 group cursor-pointer transition-opacity"
+        >
+          <div className="w-8 h-8 rounded-lg bg-slate-800 dark:bg-slate-800 text-white dark:text-slate-100 flex items-center justify-center shadow-xs border border-slate-700/60 group-hover:scale-105 group-hover:bg-slate-700 dark:group-hover:bg-slate-700 transition-all">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          {user && (
+            <span className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate max-w-[150px] sm:max-w-none group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
+              {user?.firstName}{`'s`} Space
+            </span>
+          )}
+        </Link>
+      </div>
 
       <Breadcrumbs />
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         <DarkModeToggle />
 
         <SignedOut>
@@ -25,7 +38,9 @@ function Header() {
         </SignedOut>
 
         <SignedIn>
-          <UserButton />
+          <div className="ring-2 ring-gray-200 dark:ring-gray-800 rounded-full p-0.5 transition-all">
+            <UserButton />
+          </div>
         </SignedIn>
       </div>
     </header>
