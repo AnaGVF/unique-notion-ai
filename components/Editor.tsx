@@ -4,8 +4,7 @@ import { useRoom } from '@liveblocks/react/suspense';
 import * as Y from "yjs";
 import React, { useEffect, useState } from 'react'
 import { LiveblocksYjsProvider } from '@liveblocks/yjs'
-import { Button } from './ui/button';
-import { MoonIcon, SunIcon } from 'lucide-react';
+
 import { BlockNoteView } from "@blocknote/shadcn";
 import { useCreateBlockNote } from "@blocknote/react";
 import { withCollaboration } from "@blocknote/core/yjs";
@@ -102,15 +101,6 @@ function Editor() {
             <div className='flex items-center gap-2 justify-end mb-10'>
                 <TranslateDocument doc={doc} />
                 <ChatToDocument doc={doc} />
-
-                {/* Dark Mode */}
-                <Button
-                    variant="outline"
-                    onClick={() => setTheme(isDarkMode ? "light" : "dark")}
-                    aria-label="Toggle dark mode"
-                >
-                    {isDarkMode ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
-                </Button>
             </div>
             {/* BlockNote */}
             <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} />
