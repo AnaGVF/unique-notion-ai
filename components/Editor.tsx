@@ -97,15 +97,17 @@ function Editor() {
     const isDarkMode = mounted ? resolvedTheme === "dark" : false;
 
     return (
-        <div className='max-w-6xl mx-auto'>
+        <div className='max-w-6xl mx-auto relative'>
             <div className='flex items-center gap-2 justify-end mb-6'>
                 <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-xs shadow-2xs">
                     <TranslateDocument doc={doc} />
-                    <ChatToDocument doc={doc} />
                 </div>
             </div>
             {/* BlockNote */}
             <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} />
+
+            {/* Floating Bottom-Right AI Assistant Widget */}
+            <ChatToDocument doc={doc} />
         </div>
     )
 }
