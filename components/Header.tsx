@@ -38,7 +38,7 @@ function Header() {
         </SignedOut>
 
         <SignedIn>
-          <div className="ring-2 ring-gray-200 dark:ring-gray-800 rounded-full p-0.5 transition-all">
+          <div className="flex items-center justify-center rounded-full ring-2 ring-gray-200 dark:ring-gray-800 p-0.5">
             <UserButton />
           </div>
         </SignedIn>

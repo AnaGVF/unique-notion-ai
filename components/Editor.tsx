@@ -14,6 +14,8 @@ import { useSelf } from '@liveblocks/react';
 import stringToColor from '@/lib/stringToColor';
 import TranslateDocument from './TranslateDocument';
 import ChatToDocument from './ChatToDocument';
+import AstroWritingAssistant from './AstroWritingAssistant';
+import AstroSelectionToolbar from './AstroSelectionToolbar';
 import { useTheme } from 'next-themes';
 
 type EditorProps = {
@@ -43,6 +45,16 @@ function BlockNote({ doc, provider, darkMode }: EditorProps) {
 
     return (
         <div className='relative max-w-6xl mx-auto'>
+            <div className='flex items-center gap-2 justify-end mb-6'>
+                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-xs shadow-2xs">
+                    <AstroWritingAssistant doc={doc} editor={editor} />
+                    <TranslateDocument doc={doc} />
+                </div>
+            </div>
+
+            {/* Floating Selection Astro AI Toolbar */}
+            <AstroSelectionToolbar doc={doc} editor={editor} />
+
             <BlockNoteView
                 className='min-h-screen'
                 editor={editor}
@@ -56,7 +68,7 @@ function Editor() {
     const room = useRoom();
     const [doc, setDoc] = useState<Y.Doc>();
     const [provider, setProvider] = useState<LiveblocksYjsProvider>();
-    const { resolvedTheme, setTheme } = useTheme();
+    const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -98,11 +110,6 @@ function Editor() {
 
     return (
         <div className='max-w-6xl mx-auto relative'>
-            <div className='flex items-center gap-2 justify-end mb-6'>
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-xs shadow-2xs">
-                    <TranslateDocument doc={doc} />
-                </div>
-            </div>
             {/* BlockNote */}
             <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} />
 
@@ -112,4 +119,4 @@ function Editor() {
     )
 }
 
-export default Editor
+export default Editor;
