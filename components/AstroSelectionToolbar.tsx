@@ -177,7 +177,7 @@ export default function AstroSelectionToolbar({ doc, editor }: AstroSelectionToo
 
                 if (res.ok) {
                     const data = await res.json();
-                    let rawResult = data.message || data.result || "No response generated.";
+                    const rawResult = data.message || data.result || "No response generated.";
                     // Clean unwanted markdown header symbols
                     const cleaned = rawResult.replace(/^#{1,6}\s+/gm, "").trim();
                     setAiResult(cleaned);

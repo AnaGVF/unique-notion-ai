@@ -36,7 +36,7 @@ function Avatars() {
             {/* Avatar Stack */}
             <div className='flex -space-x-2 overflow-hidden'>
                 {all.map((other, i) => (
-                    <TooltipProvider key={other?.id || i}>
+                    <TooltipProvider key={other?.connectionId ?? `${other?.id}-${i}`}>
                         <Tooltip>
                             <TooltipTrigger className='relative hover:z-50 focus:z-50 transition-all duration-200 hover:scale-110'>
                                 <Avatar className="w-7 h-7 ring-2 ring-white dark:ring-gray-950 shadow-xs">

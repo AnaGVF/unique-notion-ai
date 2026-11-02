@@ -11,7 +11,8 @@ export async function createNewDocument() {
 
     const docCollectionRef = adminDB.collection("documents");
     const docRef = await docCollectionRef.add({
-        title: "New Doc"
+        title: "New Doc",
+        isTrash: false,
     });
 
     await adminDB.collection("users").doc(sessionClaims?.email!).collection("rooms").doc(docRef.id).set({
@@ -19,16 +20,91 @@ export async function createNewDocument() {
         role: "owner",
         created: new Date(),
         roomId: docRef.id,
+        isFavorite: false,
+        isTrash: false,
     });
 
     return { docId: docRef.id };
+}
+
+export async function toggleFavorite(roomId: string, isFavorite: boolean) {
+    await auth.protect();
+    const { sessionClaims } = await auth();
+
+    if (!sessionClaims?.email) return { success: false };
+
+    try {
+        await adminDB
+            .collection("users")
+            .doc(sessionClaims.email)
+            .collection("rooms")
+            .doc(roomId)
+            .set({ isFavorite }, { merge: true });
+
+        return { success: true };
+    } catch (error) {
+        console.error("toggleFavorite error:", error);
+        return { success: false };
+    }
+}
+
+export async function moveToTrash(roomId: string) {
+    await auth.protect();
+    const { sessionClaims } = await auth();
+
+    try {
+        await adminDB.collection("documents").doc(roomId).set({
+            isTrash: true,
+            trashedAt: new Date(),
+        }, { merge: true });
+
+        if (sessionClaims?.email) {
+            await adminDB
+                .collection("users")
+                .doc(sessionClaims.email)
+                .collection("rooms")
+                .doc(roomId)
+                .set({ isTrash: true }, { merge: true });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("moveToTrash error:", error);
+        return { success: false };
+    }
+}
+
+export async function restoreFromTrash(roomId: string) {
+    await auth.protect();
+    const { sessionClaims } = await auth();
+
+    try {
+        await adminDB.collection("documents").doc(roomId).set({
+            isTrash: false,
+            trashedAt: null,
+        }, { merge: true });
+
+        if (sessionClaims?.email) {
+            await adminDB
+                .collection("users")
+                .doc(sessionClaims.email)
+                .collection("rooms")
+                .doc(roomId)
+                .set({ isTrash: false }, { merge: true });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("restoreFromTrash error:", error);
+        return { success: false };
+    }
 }
 
 export async function deleteDocument(roomId: string) {
     await auth.protect(); // Ensure the user is authenticated
     const { sessionClaims } = await auth();
 
-    console.log("deleteDocument", roomId);
+    console.log("deleteDocument permanently", roomId);
 
     try {
         // delete the document reference itself
@@ -90,6 +166,8 @@ export async function inviteUserToDocument(roomId: string, email: string) {
                 role: "editor",
                 created: new Date(),
                 roomId,
+                isFavorite: false,
+                isTrash: false,
             });
 
         return { success: true };

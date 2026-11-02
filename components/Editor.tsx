@@ -16,15 +16,17 @@ import TranslateDocument from './TranslateDocument';
 import ChatToDocument from './ChatToDocument';
 import AstroWritingAssistant from './AstroWritingAssistant';
 import AstroSelectionToolbar from './AstroSelectionToolbar';
+import ExportDocument from './ExportDocument';
 import { useTheme } from 'next-themes';
 
 type EditorProps = {
     doc: Y.Doc;
     provider: LiveblocksYjsProvider;
     darkMode: boolean;
+    title?: string;
 };
 
-function BlockNote({ doc, provider, darkMode }: EditorProps) {
+function BlockNote({ doc, provider, darkMode, title }: EditorProps) {
     const userInfo = useSelf((me) => me.info);
 
     const editor = useCreateBlockNote(
@@ -45,10 +47,11 @@ function BlockNote({ doc, provider, darkMode }: EditorProps) {
 
     return (
         <div className='relative max-w-6xl mx-auto'>
-            <div className='flex items-center gap-2 justify-end mb-6'>
+            <div className='flex items-center gap-2 justify-end mb-6 no-print'>
                 <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-xs shadow-2xs">
                     <AstroWritingAssistant doc={doc} editor={editor} />
                     <TranslateDocument doc={doc} />
+                    <ExportDocument editor={editor} title={title} />
                 </div>
             </div>
 
@@ -64,7 +67,7 @@ function BlockNote({ doc, provider, darkMode }: EditorProps) {
     )
 }
 
-function Editor() {
+function Editor({ title }: { title?: string }) {
     const room = useRoom();
     const [doc, setDoc] = useState<Y.Doc>();
     const [provider, setProvider] = useState<LiveblocksYjsProvider>();
@@ -111,7 +114,7 @@ function Editor() {
     return (
         <div className='max-w-6xl mx-auto relative'>
             {/* BlockNote */}
-            <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} />
+            <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} title={title} />
 
             {/* Floating Bottom-Right AI Assistant Widget */}
             <ChatToDocument doc={doc} />

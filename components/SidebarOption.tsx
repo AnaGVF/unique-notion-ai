@@ -44,18 +44,23 @@ function SidebarOption({ href, id, searchQuery }: {
     return (
         <Link
             href={href}
+            prefetch={true}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all group ${
                 isActive
                     ? "bg-neutral-200/80 dark:bg-neutral-800/80 text-neutral-900 dark:text-neutral-100 font-medium border border-neutral-300/50 dark:border-neutral-700/50 shadow-2xs"
                     : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-neutral-100 border border-transparent"
             }`}
         >
-            <FileText className={`w-4 h-4 shrink-0 transition-colors ${
-                isActive ? "text-neutral-800 dark:text-neutral-200" : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300"
-            }`} />
+            {data.icon ? (
+                <span className="text-sm shrink-0 leading-none">{data.icon}</span>
+            ) : (
+                <FileText className={`w-4 h-4 shrink-0 transition-colors ${
+                    isActive ? "text-neutral-800 dark:text-neutral-200" : "text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300"
+                }`} />
+            )}
             <span className='truncate'>{data.title || "Untitled"}</span>
         </Link>
     )
 }
 
-export default SidebarOption 
+export default SidebarOption;

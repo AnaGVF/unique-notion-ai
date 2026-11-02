@@ -146,3 +146,26 @@ div[style*="z-index: 2147483647"] {
 div[data-nextjs-dialog-overlay] {
   display: none !important;
 }
+
+
+/* Print Styles for PDF / Document Export */
+@media print {
+  header,
+  aside,
+  #astro-selection-toolbar,
+  [data-sonner-toaster],
+  button:not(.print-keep),
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .bn-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}

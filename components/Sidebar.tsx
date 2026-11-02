@@ -1,6 +1,15 @@
 "use client";
 
-import { ChevronDown, ChevronRight, Folder, MenuIcon, Search, Users } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Folder,
+  MenuIcon,
+  Search,
+  Star,
+  Trash2,
+  Users
+} from "lucide-react";
 import NewDocumentButton from "./NewDocumentButton";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useUser } from "@clerk/nextjs";
@@ -18,26 +27,33 @@ import {
 import SidebarOption from "./SidebarOption";
 import { Input } from "./ui/input";
 
-
 interface RoomDocument extends DocumentData {
   createdAt: string;
   role: "owner" | "editor";
   roomId: string;
   userId: string;
+  isFavorite?: boolean;
+  isTrash?: boolean;
 }
 
 function Sidebar() {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(true);
   const [isMyDocsOpen, setIsMyDocsOpen] = useState(true);
   const [isSharedOpen, setIsSharedOpen] = useState(true);
+  const [isTrashOpen, setIsTrashOpen] = useState(false);
 
   const [groupedData, setGroupedData] = useState<{
+    favorites: RoomDocument[];
     owner: RoomDocument[];
     editor: RoomDocument[];
+    trash: RoomDocument[];
   }>({
+    favorites: [],
     owner: [],
     editor: [],
+    trash: [],
   });
 
   const [data] = useCollection(
@@ -51,28 +67,41 @@ function Sidebar() {
     if (!data) return;
 
     const grouped = data.docs.reduce<{
+      favorites: RoomDocument[];
       owner: RoomDocument[];
       editor: RoomDocument[];
+      trash: RoomDocument[];
     }>(
       (acc, curr) => {
         const roomData = curr.data() as RoomDocument;
+        const item = {
+          id: curr.id,
+          ...roomData,
+        };
+
+        if (roomData.isTrash) {
+          acc.trash.push(item);
+          return acc;
+        }
+
+        if (roomData.isFavorite) {
+          acc.favorites.push(item);
+        }
 
         if (roomData.role === "owner") {
-          acc.owner.push({
-            id: curr.id,
-            ...roomData,
-          });
+          acc.owner.push(item);
         } else {
-          acc.editor.push({
-            id: curr.id,
-            ...roomData,
-          });
+          acc.editor.push(item);
         }
+
         return acc;
-      }, {
-      owner: [],
-      editor: [],
-    }
+      },
+      {
+        favorites: [],
+        owner: [],
+        editor: [],
+        trash: [],
+      }
     );
     setGroupedData(grouped);
   }, [data]);
@@ -94,6 +123,33 @@ function Sidebar() {
       </div>
 
       <div className="flex flex-col space-y-4 overflow-y-auto max-h-[calc(100vh-220px)] scrollbar-hide pr-0.5">
+        {/* Starred / Favorites Section */}
+        {groupedData.favorites.length > 0 && (
+          <div className="flex flex-col space-y-1">
+            <button
+              onClick={() => setIsFavoritesOpen(!isFavoritesOpen)}
+              className="flex items-center justify-between py-1.5 px-2 text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900/60 transition-colors cursor-pointer w-full text-left"
+            >
+              <div className="flex items-center gap-1.5">
+                {isFavoritesOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                <span>Favorites</span>
+              </div>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-mono">
+                {groupedData.favorites.length}
+              </span>
+            </button>
+
+            {isFavoritesOpen && (
+              <div className="flex flex-col space-y-1 pl-1">
+                {groupedData.favorites.map((doc) => (
+                  <SidebarOption key={`fav-${doc.id}`} id={doc.id} href={`/doc/${doc.id}`} searchQuery={searchQuery} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* My Documents Section */}
         <div className="flex flex-col space-y-1">
           <button
@@ -151,6 +207,33 @@ function Sidebar() {
             )}
           </div>
         )}
+
+        {/* Trash / Archive Bin Section */}
+        {groupedData.trash.length > 0 && (
+          <div className="flex flex-col space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+            <button
+              onClick={() => setIsTrashOpen(!isTrashOpen)}
+              className="flex items-center justify-between py-1.5 px-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900/60 transition-colors cursor-pointer w-full text-left"
+            >
+              <div className="flex items-center gap-1.5">
+                {isTrashOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                <Trash2 className="w-3.5 h-3.5 text-neutral-400" />
+                <span>Trash</span>
+              </div>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-neutral-200/80 dark:bg-neutral-800 text-neutral-500 font-mono">
+                {groupedData.trash.length}
+              </span>
+            </button>
+
+            {isTrashOpen && (
+              <div className="flex flex-col space-y-1 pl-1">
+                {groupedData.trash.map((doc) => (
+                  <SidebarOption key={`trash-${doc.id}`} id={doc.id} href={`/doc/${doc.id}`} searchQuery={searchQuery} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -174,6 +257,6 @@ function Sidebar() {
         {menuOptions}
       </div>
     </aside>
-  )
+  );
 }
-export default Sidebar
+export default Sidebar;

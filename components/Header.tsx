@@ -3,7 +3,7 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
 import DarkModeToggle from "./DarkModeToggle";
-import { Sparkles } from "lucide-react";
+import { Feather } from "lucide-react";
 import Link from "next/link";
 
 function Header() {
@@ -18,7 +18,7 @@ function Header() {
           className="flex items-center gap-2.5 group cursor-pointer transition-opacity"
         >
           <div className="w-8 h-8 rounded-lg bg-slate-800 dark:bg-slate-800 text-white dark:text-slate-100 flex items-center justify-center shadow-xs border border-slate-700/60 group-hover:scale-105 group-hover:bg-slate-700 dark:group-hover:bg-slate-700 transition-all">
-            <Sparkles className="w-4 h-4" />
+            <Feather className="w-4 h-4 text-slate-100 group-hover:-rotate-12 transition-transform duration-300" />
           </div>
           {user && (
             <span className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 truncate max-w-[150px] sm:max-w-none group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors">
