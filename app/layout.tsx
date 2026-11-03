@@ -9,9 +9,6 @@ import { Toaster } from "@/components/ui/sonner";
 export const metadata: Metadata = {
   title: "Unique Notion AI — Astro Workspace",
   description: "Real-time collaborative Notion-style workspace powered by Liveblocks and Cloudflare Workers AI.",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export default function RootLayout({
