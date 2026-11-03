@@ -58,7 +58,12 @@ function Document({ id }: { id: string }) {
     useEffect(() => {
         if (data) {
             setInput(data.title || '');
+            const currentTitle = data.title?.trim() || 'Untitled';
+            document.title = `${currentTitle} — Unique Notion AI`;
         }
+        return () => {
+            document.title = "Unique Notion AI";
+        };
     }, [data]);
 
     const saveTitle = (newTitle: string) => {
@@ -77,6 +82,9 @@ function Document({ id }: { id: string }) {
     const handleTitleChange = (val: string) => {
         setInput(val);
         setIsSaved(false);
+        if (val.trim()) {
+            document.title = `${val.trim()} — Unique Notion AI`;
+        }
 
         if (debounceTimeoutRef.current) {
             clearTimeout(debounceTimeoutRef.current);
@@ -155,7 +163,7 @@ function Document({ id }: { id: string }) {
     }
 
     return (
-        <div className='flex-1 h-full bg-white dark:bg-gray-950 p-6 sm:p-8 md:p-10 rounded-xl shadow-xs border border-gray-200/80 dark:border-gray-800/80 transition-colors'>
+        <div className='flex-1 h-full bg-white dark:bg-gray-950 p-6 sm:p-8 md:p-10 rounded-xl shadow-xs border border-gray-200/80 dark:border-gray-800/80 transition-colors print:p-0 print:border-none print:shadow-none print:rounded-none print:bg-transparent print:h-auto'>
             {/* Trash Warning Banner */}
             {isTrash && (
                 <div className="mb-6 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between flex-wrap gap-2 animate-in fade-in duration-300">
@@ -259,7 +267,7 @@ function Document({ id }: { id: string }) {
 
             {/* Editor Canvas */}
             <div className="pt-2">
-                <Editor title={data?.title || input} />
+                <Editor title={data?.title || input} id={id} initialContent={data?.initialContent} />
             </div>
         </div>
     );

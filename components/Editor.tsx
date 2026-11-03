@@ -18,16 +18,22 @@ import AstroWritingAssistant from './AstroWritingAssistant';
 import AstroSelectionToolbar from './AstroSelectionToolbar';
 import ExportDocument from './ExportDocument';
 import { useTheme } from 'next-themes';
+import { doc as docRef, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
+import { useRef } from 'react';
 
 type EditorProps = {
     doc: Y.Doc;
     provider: LiveblocksYjsProvider;
     darkMode: boolean;
     title?: string;
+    id?: string;
+    initialContent?: string | null;
 };
 
-function BlockNote({ doc, provider, darkMode, title }: EditorProps) {
+function BlockNote({ doc, provider, darkMode, title, id, initialContent }: EditorProps) {
     const userInfo = useSelf((me) => me.info);
+    const initialContentApplied = useRef(false);
 
     const editor = useCreateBlockNote(
         withCollaboration({
@@ -45,12 +51,43 @@ function BlockNote({ doc, provider, darkMode, title }: EditorProps) {
         [doc, provider, userInfo?.name, userInfo?.email]
     );
 
+    // If initialContent is provided from a cloned/translated copy, populate the editor once ready
+    useEffect(() => {
+        if (!editor || !initialContent || initialContentApplied.current) return;
+
+        // Check if document is newly created and empty
+        const isDocEmpty =
+            editor.document.length === 0 ||
+            (editor.document.length === 1 &&
+                editor.document[0].type === "paragraph" &&
+                (!editor.document[0].content || editor.document[0].content.length === 0));
+
+        if (isDocEmpty) {
+            initialContentApplied.current = true;
+            (async () => {
+                try {
+                    const blocks = await editor.tryParseMarkdownToBlocks(initialContent);
+                    if (blocks && blocks.length > 0) {
+                        editor.replaceBlocks(editor.document, blocks);
+                    }
+                    if (id) {
+                        await updateDoc(docRef(db, "documents", id), {
+                            initialContent: null,
+                        });
+                    }
+                } catch (err) {
+                    console.error("Failed to parse initialContent into blocks:", err);
+                }
+            })();
+        }
+    }, [editor, initialContent, id]);
+
     return (
-        <div className='relative max-w-6xl mx-auto'>
+        <div className='relative max-w-6xl mx-auto print:max-w-none print:m-0'>
             <div className='flex items-center gap-2 justify-end mb-6 no-print'>
                 <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800/80 backdrop-blur-xs shadow-2xs">
                     <AstroWritingAssistant doc={doc} editor={editor} />
-                    <TranslateDocument doc={doc} />
+                    <TranslateDocument doc={doc} editor={editor} docId={id} title={title} />
                     <ExportDocument editor={editor} title={title} />
                 </div>
             </div>
@@ -59,7 +96,7 @@ function BlockNote({ doc, provider, darkMode, title }: EditorProps) {
             <AstroSelectionToolbar doc={doc} editor={editor} />
 
             <BlockNoteView
-                className='min-h-screen'
+                className='min-h-screen print:min-h-0 print:p-0'
                 editor={editor}
                 theme={darkMode ? "dark" : "light"}
             />
@@ -67,7 +104,7 @@ function BlockNote({ doc, provider, darkMode, title }: EditorProps) {
     )
 }
 
-function Editor({ title }: { title?: string }) {
+function Editor({ title, id, initialContent }: { title?: string; id?: string; initialContent?: string | null }) {
     const room = useRoom();
     const [doc, setDoc] = useState<Y.Doc>();
     const [provider, setProvider] = useState<LiveblocksYjsProvider>();
@@ -114,7 +151,7 @@ function Editor({ title }: { title?: string }) {
     return (
         <div className='max-w-6xl mx-auto relative'>
             {/* BlockNote */}
-            <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} title={title} />
+            <BlockNote doc={doc} provider={provider} darkMode={isDarkMode} title={title} id={id || room.id} initialContent={initialContent} />
 
             {/* Floating Bottom-Right AI Assistant Widget */}
             <ChatToDocument doc={doc} />

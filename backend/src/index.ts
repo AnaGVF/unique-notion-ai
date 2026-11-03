@@ -85,7 +85,7 @@ app.post("/chatToDocument", async (c) => {
 
 app.post("/translateDocument", async (c) => {
 	try {
-		const { documentData, targetLang } = await c.req.json();
+		const { documentData, targetLang, mode } = await c.req.json();
 
 		let textContent = extractCleanText(documentData);
 
@@ -93,14 +93,19 @@ app.post("/translateDocument", async (c) => {
 			return c.json({ translatedText: "The document is empty." });
 		}
 
+		const isFull = mode === "full";
+		const systemPrompt = isFull
+			? `You are an expert translator. Translate the following document completely and accurately into ${targetLang || "english"}. Preserve all structure, headings, bullet points, checklists, emojis, and formatting. Do not summarize, omit, or shorten any content. Return ONLY the translated document in clean Markdown with no conversational filler or explanation.`
+			: `You are an expert translator and summarizer. You will be provided with the text content of a user's document.
+Your task is to summarize the document and translate that summary into ${targetLang || "english"}.
+Format your output using clean Markdown (such as headings, bullet points, and concise paragraphs).
+Do NOT include any XML tags, HTML tags, or meta code. Return only the translated summary directly with no conversational filler.`;
+
 		const response: any = await c.env.AI.run("@cf/meta/llama-3.2-3b-instruct", {
 			messages: [
 				{
 					role: "system",
-					content: `You are an expert translator and summarizer. You will be provided with the text content of a user's document.
-Your task is to summarize the document and translate that summary into ${targetLang || "english"}.
-Format your output using clean Markdown (such as headings, bullet points, and concise paragraphs).
-Do NOT include any XML tags, HTML tags, or meta code. Return only the translated summary directly with no conversational filler.`,
+					content: systemPrompt,
 				},
 				{
 					role: "user",

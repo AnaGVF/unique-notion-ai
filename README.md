@@ -1,7 +1,7 @@
 # 🪶 Unique Notion AI — Astro Workspace
 
 <p align="center">
-  <strong>An enterprise-grade, real-time collaborative workspace and block-based document editor augmented with Astro AI — an edge-powered intelligence suite for real-time document writing, contextual refactoring, multi-user presence, and document translation.</strong>
+  <strong>A modern, real-time collaborative workspace and block-based document editor augmented with Astro AI — an edge-powered intelligence suite for live co-authoring, contextual writing assistance, multi-user presence, and instant document translation.</strong>
 </p>
 
 <p align="center">
@@ -34,7 +34,33 @@ Modern knowledge management and document authoring platforms often suffer from c
 1. **Zero-Latency Multiplayer Sync via CRDTs**: Powered by **Liveblocks** and **Yjs**, edits merge deterministically in real time. Every collaborator sees live fluid cursors, active color badges, and instant character updates with zero merge conflicts.
 2. **Modular Block-Based Canvas**: Built on **BlockNote**, the editor treats every paragraph, heading, checklist, code snippet, and callout as an independent block that can be restructured, converted, or exported to clean markdown on demand.
 3. **Edge-Accelerated Astro AI Assistant**: Uses **Cloudflare Workers AI** running **Meta Llama 3.2 3B Instruct** at the edge. Intelligence happens directly where your users are with sub-second response times for full document rewriting, smart contextual text selection, real-time chat, and 20+ language translations.
-4. **Enterprise Role-Based Security & Performance**: Complete document ownership, user invites, editor revocations, and authentication handled securely across **Clerk** and **Firebase Firestore**, optimized with edge middleware and instant route prefetching.
+4. **Role-Based Security & High-Performance Architecture**: Complete document ownership, user invites, editor revocations, and authentication handled securely across **Clerk** and **Firebase Firestore**, optimized with edge middleware and instant route prefetching.
+
+---
+
+## 📸 Live Interface & Feature Demos
+
+### 1. Real-Time Multiplayer Collaboration & Grounded Astro AI Copilot
+
+![Real-Time Multiplayer Collaboration & Astro AI Copilot](images/demo_functionality_001.png)
+
+> **Key Capabilities Demonstrated Above:**
+> - **Zero-Latency Multiplayer Sync**: Dual browser sessions co-editing the same document simultaneously powered by Yjs CRDTs and Liveblocks.
+> - **Live Follower Cursors & Presence Badges**: Real-time cursor tracking with custom color badges (`Ana Vassallo`), live presence counters (`2 users online`), and header avatar stacks.
+> - **Context-Aware Astro AI Copilot (`ChatToDocument`)**: Floating bottom-right assistant grounded in the live document tree, answering factual questions (e.g. verifying if chicken is listed under *"Meat and Poultry"*) and summarizing document contents on demand without leaving the canvas.
+> - **BlockNote Canvas & Document Customization**: Notion-style modular blocks, custom emoji icons (`🍕`), and debounced real-time cloud persistence (`Saved to cloud`).
+
+---
+
+### 2. Intelligent Multilingual Translation & Adaptive Dark Mode
+
+![Multilingual Translation & Dark Theme](images/demo_functionality_002.png)
+
+> **Key Capabilities Demonstrated Above:**
+> - **Edge-Powered Document Translation**: Interactive studio modal for converting full documents or executive summaries into 20+ languages with 1-click quick-select pills.
+> - **Full Hierarchy & Emoji Preservation**: The translation engine (shown converting to German) faithfully retains emoji markers, nested bullet structures, and category headers.
+> - **Flexible Actions & Cloned Permissions**: Choose between **Replace Current Doc**, appending with **Insert below**, or **Create Translated Copy** (which automatically clones the cover image, emoji icon, and all collaborator permissions across Firestore).
+> - **Adaptive Dark & Light Themes**: Seamless transition between dark and light modes with full contrast adherence, preserving live cursor awareness and collaborative edits across both color palettes.
 
 ---
 
@@ -45,15 +71,19 @@ Modern knowledge management and document authoring platforms often suffer from c
 - **Instant Slash (`/`) Commands**: Access formatting tools, structural changes, and insert elements with standard keyboard navigation.
 - **Lossless Markdown Interoperability**: Seamlessly converts block hierarchies into Markdown and parses AI Markdown responses directly back into native editor blocks.
 - **Debounced Auto-Save Engine**: Document titles and metadata are automatically synced to Firestore with visual status indicators (`Saving...` vs `Saved to cloud`).
+- **Dynamic Browser Tab Title Sync**: Intelligently updates browser tab titles (`[Document Name] — Unique Notion AI`) in real time as documents are created, loaded, or renamed.
 
 ### 🎨 Document Covers & Page Emojis
 - **Designer Gradients & Custom Imagery**: Choose from 8 curated designer gradient banners (*Cosmic Indigo, Sunset Horizon, Ocean Depth, Emerald Glade, Obsidian Night, Golden Amber, Pastel Lavender, Cyberpunk Neon*) or paste any custom image link (Unsplash, etc.).
 - **Interactive Emoji Picker**: Select from popular Notion emojis (💡, 🚀, 🪐, 🎯, 📚, 🎨, 💼, 🔬, ⚡, 🔥, 💻, 🧠, 🌿, ✨, ☕, 🌟, 📌) or enter any custom emoji from your keyboard.
 - **Dynamic Sidebar Icon Sync**: Setting a document icon automatically replaces the default gray file icon in your sidebar with your custom emoji for instant visual recognition.
 
-### 📄 Multi-Format Export Hub (Markdown & PDF)
-- **One-Click Markdown (.md) Export**: Extracts the complete document AST via `editor.blocksToMarkdownLossy(editor.document)` and triggers an instant file download.
-- **Lossless Vector PDF & Print Engine**: Integrated print trigger with dedicated `@media print` rules that automatically strip out the sidebar, header bar, action buttons, floating chat widget, and toasts, delivering a clean, full-bleed document ready for printing or saving as PDF.
+### 📄 Multi-Format Export Hub (Markdown & Clean PDF)
+- **One-Click Markdown (.md) Export**: Instantly download your document as a clean, standardized Markdown file compatible with GitHub, Obsidian, Notion, and any note-taking app.
+- **Publication-Ready PDF Export**: Export your document as a pristine, print-ready PDF with dedicated layout rules that automatically:
+  - Remove all UI distractions (sidebars, toolbars, action buttons, floating chat widgets, and watermark badges).
+  - Eliminate browser headers and footers (no page URLs, timestamps, or app titles on the printed page).
+  - Apply balanced, elegant document margins (`16mm × 20mm`) for crisp reading and printing.
 
 ### ⭐ Starred / Favorite Documents
 - **User-Specific Favoriting**: Pin important documents with the Star toggle button in the document toolbar. Favoriting is stored per user, ensuring personal customization without affecting teammates' sidebars.
@@ -94,15 +124,14 @@ Modern knowledge management and document authoring platforms often suffer from c
 - **Floating Document Copilot**: Bottom-right assistant widget allowing users to ask natural-language questions about the document content.
 - **Grounded Context**: The edge microservice ingests the clean document tree to answer questions, explain concepts, or find details buried in large notes.
 
-### 🌐 Multi-Language Document Translation
-- **20+ Languages Supported**: Translate document summaries instantly into Spanish, French, German, Italian, Japanese, Chinese, Russian, Portuguese, Dutch, Swedish, Norwegian, Finnish, Danish, Polish, Turkish, Arabic, Hebrew, Hindi, and more.
-- **Preserved Structure**: Output maintains clean Markdown headings, bullet points, and syntax.
-
-### 🚀 High-Performance Latency & Transition Architecture
-- **Instant Link Prefetching (`prefetch={true}`)**: Next.js automatically prefetches document route bundles when links appear in the sidebar, cutting click-to-render latency.
-- **Edge Route Protection**: Moved auth verification to edge middleware (`middleware.ts`), eliminating blocking server-side layout round-trips between document navigations.
-- **Zero-Layout-Shift Skeletons**: Streaming document skeletons (`app/doc/[Id]/loading.tsx`) match the exact document canvas dimensions, providing immediate visual feedback without layout jumps.
-- **Parallelized Editor Bundle Preloading**: Starts downloading the BlockNote editor chunk in parallel with Firestore and Liveblocks data fetching.
+### 🌐 Multi-Language Document Translation & Permission-Preserved Cloning
+- **20+ Languages Supported**: Translate documents instantly into Spanish, French, German, Italian, Japanese, Chinese, Russian, Portuguese, Dutch, Swedish, Norwegian, Finnish, Danish, Polish, Turkish, Arabic, Hebrew, Hindi, and more.
+- **Dual Translation Scopes**:
+  - **Full Document**: Translates every section, heading, checklist, and detail while preserving block structure and formatting.
+  - **Executive Summary**: Generates a high-level translated digest of complex notes.
+- **In-Place Document Replacement**: Instantly swap the current document's contents with the translated version directly in the collaborative BlockNote editor (`editor.replaceBlocks`).
+- **Permission-Preserved Cloned Copies**: Create a new standalone document titled `[Doc Name] ([Language])`, inheriting original cover images and emoji icons, while **automatically copying all existing collaborator permissions** (`owner` and `editor` roles) across Firestore so team members retain immediate access.
+- **Insert Below**: Append translated blocks directly underneath existing text for bilingual notes and references.
 
 ---
 
@@ -190,8 +219,40 @@ This application was intentionally built with a best-in-class modern stack where
 ┌────────────────────────┐                             ┌──────────────────────────┐
 │ Next.js Server Actions │                             │   Cloudflare Workers AI  │
 │ (Firebase Admin SDK)   │                             │  @cf/meta/llama-3.2-3b   │
+│ - Cloned Permissions   │                             │  - Edge GPU Inference    │
 └────────────────────────┘                             └──────────────────────────┘
 ```
+
+### 🤖 The Astro AI & Chatbot Engine (How It Works)
+
+Astro AI is an edge-first intelligence system that is deeply integrated into the collaborative canvas rather than acting as a detached third-party chatbot:
+
+#### 1. In-Context Grounding & Document Cleaner (`extractCleanText`)
+When you chat with a document or ask Astro to transform it, the client extracts the live collaborative state from Yjs (`doc.get('document-store').toJSON()`). Before passing this data to the LLM, the edge worker executes a custom AST text extractor:
+- Strips ProseMirror and BlockNote internal XML container tags (`<blockcontainer>`, `<heading>`, `<paragraph>`, etc.).
+- Normalizes escaped entities (`&nbsp;`, `&amp;`, `&quot;`) and cleans whitespace.
+- Preserves natural paragraph and section line breaks so the LLM receives clean, readable Markdown context without prompt contamination or wasted token budget.
+
+#### 2. Grounded Chatbot Copilot (`ChatToDocument.tsx`)
+- Positioned as a floating widget in the lower-right corner.
+- Injects the active document context into the system prompt:
+  > *"You are a helpful assistant helping the user chat with and ask questions about a document. Answer the user's questions clearly, accurately, and concisely using Markdown formatting based on the following document content..."*
+- Enables conversational Q&A, brainstorming, fact retrieval, and summarizing without leaving the editor.
+
+#### 3. Astro Writing Assistant (`AstroWritingAssistant.tsx`)
+- Detects whether you have highlighted text with your cursor or want to transform the whole document.
+- Provides 1-click presets (*Improve Writing, Fix Grammar & Spelling, Make Concise, Extract Action Items, Shift Tone, Executive Summary*).
+- Allows you to preview the generated Markdown, copy it to clipboard, or apply it directly to the editor using `editor.replaceBlocks(editor.document, blocks)`.
+
+#### 4. Contextual Selection HUD (`AstroSelectionToolbar.tsx`)
+- Listens to DOM selection events inside the editor canvas.
+- Floats directly above the cursor when text is selected.
+- Allows immediate inline grammar repairs and tone enhancements that replace only the selected range.
+
+#### 5. Multilingual Translation & Permission-Preserved Clones (`TranslateDocument.tsx`)
+- Translates full documents or executive summaries into 20+ languages.
+- Provides 1-click **In-Place Replacement** or creates a **Translated Copy** (`actions.ts -> createTranslatedCopy`).
+- The cloning engine duplicates the source document's cover image and emoji icon, and queries Firestore (`collectionGroup("rooms")`) to **replicate all existing user permissions (`owner` and `editor`)** across every collaborator so team access remains seamless.
 
 ---
 
@@ -248,67 +309,6 @@ Using **Unique Notion AI** is simple and fluid:
    - **Translate**: Click **Translate** in the header toolbar to convert notes into 20+ languages.
 8. **Export Your Work**:
    - Click **Export** in the top toolbar to instantly download your notes as clean **Markdown (.md)** or export to **PDF**.
-
----
-
-## ⚙️ Getting Started & Setup
-
-### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.17+ or v20+ recommended)
-- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
-- A free [Clerk](https://clerk.com/) account
-- A free [Liveblocks](https://liveblocks.io/) account
-- A free [Firebase](https://firebase.google.com/) project with Firestore enabled
-- A free [Cloudflare](https://cloudflare.com/) account (for Workers AI)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/AnaGVF/unique-notion-ai.git
-cd unique-notion-ai
-```
-
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Configure Environment Variables
-Create a `.env.local` file in the root directory:
-
-```env
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-
-# Liveblocks Real-Time
-NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY=pk_dev_...
-LIVEBLOCKS_PRIVATE_KEY=sk_dev_...
-
-# Cloudflare Workers AI Endpoint
-NEXT_PUBLIC_BASE_URL=https://your-worker.your-subdomain.workers.dev
-
-# Firebase Admin Service Account (JSON string for production, or place service_key.json in root locally)
-FIREBASE_SERVICE_KEY={"type":"service_account","project_id":"..."}
-```
-
-### 4. Setup the Cloudflare AI Worker Backend
-Navigate to the `backend/` directory to configure and run the worker:
-```bash
-cd backend
-npm install
-npm run dev
-```
-To deploy the worker to your Cloudflare account:
-```bash
-npm run deploy
-```
-
-### 5. Run the Next.js Frontend
-From the root directory:
-```bash
-npm run dev
-```
-Open **[http://localhost:3000](http://localhost:3000)** in your browser to start writing!
 
 ---
 
@@ -375,8 +375,7 @@ The Next.js frontend is deployed on **[Vercel](https://vercel.com/)**. Every com
 👉 **Live URL**: [https://unique-notion-ai.vercel.app/](https://unique-notion-ai.vercel.app/)
 
 ### Backend AI Microservice (Cloudflare Workers)
-The backend AI microservice is deployed on **[Cloudflare Workers](https://workers.cloudflare.com/)** with global edge GPU bindings.
-👉 **Worker Base**: `https://sparkling-thunder-8b28.ana-vassallo97.workers.dev`
+The backend AI microservice is deployed serverless on **[Cloudflare Workers](https://workers.cloudflare.com/)** with global edge GPU bindings running Meta Llama 3.2 3B Instruct, providing ultra-low-latency edge inference for writing transformations, chat Q&A, and translations.
 
 ---
 
@@ -393,5 +392,6 @@ Designed, architected, and maintained with passion by:
 
 ## 📄 License & Intellectual Property
 
-*Copyright © 2026 Ana Graciela Vassallo Fedotkin. All rights reserved.*  
-Built as an advanced agentic coding project combining real-time CRDT collaboration with edge artificial intelligence.
+*Copyright © 2026 Ana Graciela Vassallo Fedotkin. All rights reserved.*
+
+Crafted with dedication as a modern exploration of real-time collaborative editing and agentic AI.

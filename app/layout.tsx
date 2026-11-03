@@ -7,7 +7,10 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Unique Notion AI — Astro Workspace",
+  title: {
+    default: "Unique Notion AI",
+    template: "%s — Unique Notion AI",
+  },
   description: "Real-time collaborative Notion-style workspace powered by Liveblocks and Cloudflare Workers AI.",
 };
 
@@ -28,9 +31,9 @@ export default function RootLayout({
           >
             <Header />
 
-            <div className="flex min-h-[calc(100vh-61px)]">
+            <div className="flex min-h-[calc(100vh-61px)] print:min-h-0 print:block">
               <Sidebar />
-              <div className="flex-1 p-3 sm:p-5 md:p-6 bg-gray-100/60 dark:bg-zinc-950/60 overflow-y-auto scrollbar-hide">
+              <div className="flex-1 p-3 sm:p-5 md:p-6 bg-gray-100/60 dark:bg-zinc-950/60 overflow-y-auto scrollbar-hide print:p-0 print:bg-transparent print:overflow-visible">
                 {children}
               </div>
             </div>

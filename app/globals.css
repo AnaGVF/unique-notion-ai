@@ -147,25 +147,102 @@ div[data-nextjs-dialog-overlay] {
   display: none !important;
 }
 
+/* Suppress Liveblocks Attribution / Watermark */
+a[href*="liveblocks.io"],
+[class*="lb-composer-attribution"],
+.lb-attribution,
+[data-liveblocks-badge] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 
 /* Print Styles for PDF / Document Export */
+@page {
+  /* margin: 0 removes browser headers (date, app title) and footers (page URL, page counter) */
+  margin: 0mm;
+  size: auto;
+}
+
 @media print {
+  html {
+    background: #ffffff !important;
+    color: #111827 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    margin: 0 !important;
+    padding: 16mm 20mm !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Completely eliminate card borders, frames, shadows, and backgrounds */
+  div,
+  main,
+  section,
+  article {
+    box-shadow: none !important;
+    background-color: transparent !important;
+  }
+
+  .min-h-screen,
+  [class*="min-h-screen"],
+  [class*="min-h-"] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+
   header,
   aside,
   #astro-selection-toolbar,
   [data-sonner-toaster],
   button:not(.print-keep),
-  .no-print {
+  .no-print,
+  /* Hide all fixed position elements (floating AI chat, Liveblocks watermarks, overlays) */
+  .fixed,
+  [class*="fixed"],
+  *[style*="position: fixed"],
+  *[style*="position:fixed"] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
 
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
+  /* Hide Liveblocks badge and attribution */
+  a[href*="liveblocks.io"],
+  [class*="lb-composer-attribution"],
+  .lb-attribution,
+  [data-liveblocks-badge] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
 
   .bn-container {
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .bn-editor {
+    padding: 0 !important;
+    color: #111827 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .bn-block-content {
+    color: #111827 !important;
   }
 }

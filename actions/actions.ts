@@ -196,3 +196,105 @@ export async function removeUserFromDocument(roomId: string, email: string) {
         return { success: false };
     }
 }
+
+export async function createTranslatedCopy(
+    sourceRoomId: string,
+    targetTitle: string,
+    initialContentMarkdown: string
+) {
+    await auth.protect();
+    const { sessionClaims } = await auth();
+
+    try {
+        // 1. Fetch metadata (icon, coverImage, title) from source document
+        let sourceIcon: string | null = null;
+        let sourceCoverImage: string | null = null;
+        let sourceTitle = "Untitled Document";
+
+        if (sourceRoomId) {
+            try {
+                const sourceDocSnap = await adminDB.collection("documents").doc(sourceRoomId).get();
+                if (sourceDocSnap.exists) {
+                    const data = sourceDocSnap.data();
+                    sourceIcon = data?.icon || null;
+                    sourceCoverImage = data?.coverImage || null;
+                    if (data?.title) sourceTitle = data.title;
+                }
+            } catch (err) {
+                console.warn("Could not fetch source doc metadata:", err);
+            }
+        }
+
+        // 2. Create the new document
+        const finalTitle = targetTitle || `${sourceTitle} (Translated)`;
+        const docCollectionRef = adminDB.collection("documents");
+        const newDocRef = await docCollectionRef.add({
+            title: finalTitle,
+            icon: sourceIcon,
+            coverImage: sourceCoverImage,
+            initialContent: initialContentMarkdown,
+            isTrash: false,
+            createdAt: new Date(),
+        });
+
+        const newDocId = newDocRef.id;
+
+        // 3. Query all collaborators that have access to the source document room
+        // so that all existing user permissions remain intact
+        const userRolesMap = new Map<string, { role: string }>();
+
+        if (sourceRoomId) {
+            try {
+                const query = await adminDB
+                    .collectionGroup("rooms")
+                    .where("roomId", "==", sourceRoomId)
+                    .get();
+
+                query.docs.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const userEmail = data.userId || docSnap.ref.parent.parent?.id;
+                    if (userEmail) {
+                        userRolesMap.set(userEmail, {
+                            role: data.role || "editor",
+                        });
+                    }
+                });
+            } catch (firestoreError) {
+                console.warn("Collection group query failed for permissions copy:", firestoreError);
+            }
+        }
+
+        // Ensure the current user is added as owner if not found
+        const currentEmail = sessionClaims?.email;
+        if (currentEmail && !userRolesMap.has(currentEmail)) {
+            userRolesMap.set(currentEmail, { role: "owner" });
+        }
+
+        // 4. Batch-create rooms entries in users/{email}/rooms/{newDocId}
+        const batch = adminDB.batch();
+
+        userRolesMap.forEach((info, email) => {
+            const userRoomRef = adminDB
+                .collection("users")
+                .doc(email)
+                .collection("rooms")
+                .doc(newDocId);
+
+            batch.set(userRoomRef, {
+                userId: email,
+                role: info.role,
+                created: new Date(),
+                roomId: newDocId,
+                isFavorite: false,
+                isTrash: false,
+            });
+        });
+
+        await batch.commit();
+
+        return { success: true, docId: newDocId };
+    } catch (error) {
+        console.error("Error in createTranslatedCopy:", error);
+        return { success: false, error: "Failed to create translated document copy." };
+    }
+}
